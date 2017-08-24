@@ -23,9 +23,9 @@ public final class Utils {
             Method get = c.getMethod("get", String.class);
             selinux = (String) get.invoke(c, "ro.build.selinux");
         } catch (Exception ignored) {
-
+            return false;
         }
 
-        return "1".equals(selinux) ? true : false;
+        return selinux.equals("1");
     }
 }

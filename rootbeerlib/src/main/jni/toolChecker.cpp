@@ -16,7 +16,6 @@
 #include <android/log.h>
 
 // String / file headers
-#include <string.h>
 #include <stdio.h>
 
 /****************************************************************************
@@ -44,16 +43,15 @@ static int DEBUG = 1;
  * 	bool - true to log debug messages
  *
  *****************************************************************************/
-void Java_com_scottyab_rootbeer_RootBeerNative_setLogDebugMessages( JNIEnv* env, jobject thiz, jboolean debug)
-{
-  if (debug){
-    DEBUG = 1;
-  }
-  else{
-    DEBUG = 0;
-  }
+void Java_com_scottyab_rootbeer_RootBeerNative_setLogDebugMessages(JNIEnv *env,
+                                                                   jobject thiz,
+                                                                   jboolean debug) {
+    if (debug) {
+        DEBUG = 1;
+    } else {
+        DEBUG = 0;
+    }
 }
-
 
 /*****************************************************************************
  * Description: Checks if a file exists
@@ -63,21 +61,16 @@ void Java_com_scottyab_rootbeer_RootBeerNative_setLogDebugMessages( JNIEnv* env,
  * Return value: 0 - non-existant / not visible, 1 - exists
  *
  *****************************************************************************/
-int exists(const char *fname)
-{
+int exists(const char *fname) {
     FILE *file;
-    if ((file = fopen(fname, "r")))
-    {
-        LOGD("LOOKING FOR BINARY: %s PRESENT!!!",fname);
+    if ((file = fopen(fname, "r"))) {
+        LOGD("LOOKING FOR BINARY: %s PRESENT!!!", fname);
         fclose(file);
         return 1;
     }
-    LOGD("LOOKING FOR BINARY: %s Absent :(",fname);
+    LOGD("LOOKING FOR BINARY: %s Absent :(", fname);
     return 0;
 }
-
-
-
 
 /*****************************************************************************
  * Description: Checks for root binaries
@@ -88,21 +81,21 @@ int exists(const char *fname)
  * Return value: int number of su binaries found
  *
  *****************************************************************************/
-int Java_com_scottyab_rootbeer_RootBeerNative_checkForRoot( JNIEnv* env, jobject thiz, jobjectArray pathsArray )
-{
+int Java_com_scottyab_rootbeer_RootBeerNative_checkForRoot(JNIEnv *env,
+                                                           jobject thiz,
+                                                           jobjectArray pathsArray) {
 
     int binariesFound = 0;
-
     int stringCount = (env)->GetArrayLength(pathsArray);
 
-    for (int i=0; i<stringCount; i++) {
+    for (int i = 0; i < stringCount; i++) {
         jstring string = (jstring) (env)->GetObjectArrayElement(pathsArray, i);
         const char *pathString = (env)->GetStringUTFChars(string, 0);
 
-	binariesFound+=exists(pathString);
+        binariesFound += exists(pathString);
 
-	(env)->ReleaseStringUTFChars(string, pathString);
+        (env)->ReleaseStringUTFChars(string, pathString);
     }
 
-    return binariesFound>0;
+    return binariesFound > 0;
 }
